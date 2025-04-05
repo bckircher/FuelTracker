@@ -920,9 +920,23 @@ class Button
     this.button.off(event);
   }
 
-  html(str)
+  /**
+   * Reads or updates the HTML content of the button.
+   *
+   * @param {string} string The new HTML content.
+   *
+   * @return Returns the HTML content if <code>string</code> is undefined.
+   */
+  html(string = undefined)
   {
-    this.button.html(str);
+    if(string === undefined)
+    {
+      return(this.button.html());
+    }
+    else
+    {
+      this.button.html(string);
+    }
   }
 }
 
@@ -962,6 +976,22 @@ class Input
   }
 
   /**
+   * Shows the input.
+   */
+  show()
+  {
+    this.input.show();
+  }
+
+  /**
+   * Hides the input.
+   */
+  hide()
+  {
+    this.input.hide();
+  }
+
+  /**
    * Adds an event handler to the input.
    *
    * @param {string} event The name of the event.
@@ -984,6 +1014,16 @@ class Input
   }
 
   /**
+   * Triggers an event.
+   *
+   * @param {string} event The name of the event.
+   */
+  trigger(event)
+  {
+    this.input.trigger(event);
+  }
+
+  /**
    * Gets or sets the value of the input.
    *
    * @param {string} value The optional new value for the input.
@@ -1000,6 +1040,18 @@ class Input
     {
       this.input.val(value);
     }
+  }
+
+  /**
+   * Gets the file object from a file input.
+   *
+   * @note This will fail for non-file inputs!
+   *
+   * @returns The file object of the selected file.
+   */
+  file()
+  {
+    return(this.input[0].files[0]);
   }
 }
 
@@ -1733,6 +1785,8 @@ class MainPanel
     new Button(span.span);
     span = new Span(panel.footer, "", "flex-row");
     let upload = new Button(span.span, fa("upload"));
+    let file = new Input(span.span, "file");
+    file.hide();
     let download = new Button(span.span, fa("download"));
 
     // Add click handlers to the buttons in the header and footer.
@@ -1740,7 +1794,7 @@ class MainPanel
     add.on("click", this.onAdd);
     download.on("click", this.onDownload);
     signin.on("click", this.onSignin);
-    upload.on("click", this.onUpload);
+    upload.on("click", () => this.onUpload(this));
 
     // Set the Z index of the panel, so that it does not cover any of the other
     // panels (without depending on the order in which the panels are created).
@@ -1753,6 +1807,7 @@ class MainPanel
     this.panel = panel;
     this.body = panel.body;
     this.signin = signin;
+    this.file = file;
   }
 
   /**
@@ -1795,8 +1850,80 @@ class MainPanel
    */
   async onDownload()
   {
-    // TODO implement this
-    await showAlert("Download coming soon...");
+    // The object to which all of the car data is added.
+    let cars = [];
+
+    // Get the list of cars in the database.
+    let carIds = [];
+    let years = [];
+    let makes = [];
+    let models = [];
+    let purchases = [];
+    let mileages = [];
+    await dbCarsEnumerate(carIds, years, makes, models, purchases, mileages);
+
+    // Loop through all the cars.
+    for(let idx = 0; idx < carIds.length; idx++)
+    {
+      // Get all the fuel records for this car.
+      let fuelIds = [];
+      let dates = [];
+      let fuelMileages = [];
+      let prices = [];
+      let quantities = [];
+      let totals = [];
+      let partials = [];
+      let misses = [];
+      await dbFuelEnumerate(carIds[idx], fuelIds, dates, fuelMileages, prices,
+                            quantities, totals, partials, misses);
+
+      // The object to which all of the fill-up data is added.
+      let fuel = [];
+
+      // Loop through all the fuel records.
+      for(let idx2 = 0; idx2 < fuelIds.length; idx2++)
+      {
+        // Build an object with the details of this fuel record.
+        let record =
+        {
+          date: dates[idx2],
+          mileage: fuelMileages[idx2],
+          price: prices[idx2],
+          quantity: quantities[idx2],
+          total: totals[idx2],
+          partial: partials[idx2],
+          misses: misses[idx2]
+        };
+
+        // Add this fuel record to the fuel array.
+        fuel.push(record);
+      }
+
+      // Build an object with the details of this car, along with the array of
+      // fuel records.
+      let record =
+      {
+        year: years[idx],
+        make: makes[idx],
+        model: models[idx],
+        purchase: purchases[idx],
+        mileage: mileages[idx],
+        fuel: fuel
+      };
+
+      // Add this car record to the car array.
+      cars.push(record);
+    }
+
+    // Convert the car array into a JSON string.
+    cars = JSON.stringify(cars);
+
+    // Trigger a download of the resulting JSON string.
+    Object.assign(document.createElement("a"),
+                  {
+                    href: `data:text/json;base64,${window.btoa(cars)}`,
+                    download: "fuel_tracker.json"
+                  }).click();
   }
 
   /**
@@ -1811,10 +1938,114 @@ class MainPanel
   /**
    * Called when the upload button is clicked.
    */
-  async onUpload()
+  async onUpload(obj)
   {
-    // TODO implement this
-    await showAlert("Upload coming soon...");
+    // Called when the file contents have been read.
+    async function
+    fileLoaded(text)
+    {
+      let json;
+
+      // Parse the file as a JSON.
+      try
+      {
+        json = JSON.parse(text);
+      }
+      catch
+      {
+        // Indicate that the file is invalid.
+        await showAlert("Invalid file!");
+
+        // There is nothing further to do.
+        return;
+      }
+
+      // Determine if the current cars should be kept/augmented or deleted.
+      let answer = await showConfirm("Add to the current cars, or replace " +
+                                     "them?", "Add", "Replace");
+
+      // Delete the current cars if directed to do so.
+      if(answer === false)
+      {
+        // Get a list of all the cars.
+        let carIds = [];
+        await dbCarsEnumerate(carIds);
+
+        // Loop through the cars.
+        for(let idx = 0; idx < carIds.length; idx++)
+        {
+          // Get a list of the fill-up records for this car.
+          let fuelIds = [];
+          await dbFuelEnumerate(carIds[idx], fuelIds);
+
+          // Loop through the fill-up records.
+          for(let idx2 = 0; idx2 < fuelIds.length; idx2++)
+          {
+            // Delete this fill-up record.
+            await dbFuelDelete(fuelIds[idx2]);
+          }
+
+          // Delete this car.
+          await dbCarDelete(carIds[idx]);
+        }
+      }
+
+      // Loop through the cars in the JSON data.
+      for(let idx = 0; idx < json.length; idx++)
+      {
+        // Add this car to the database.
+        let carId = await dbCarAdd(json[idx].year, json[idx].make,
+                                   json[idx].model, json[idx].purchase,
+                                   json[idx].mileage);
+
+        // Loop through the fill-up records for this car.
+        for(let idx2 = 0; idx2 < json[idx].fuel.length; idx2++)
+        {
+          // Get this fill-up record.
+          let fuel = json[idx].fuel[idx2];
+
+          // Add it to the database.
+          await dbFuelAdd(carId, fuel.date, fuel.mileage, fuel.price,
+                          fuel.quantity, fuel.total, fuel.partial,
+                          fuel.missed);
+        }
+      }
+
+      // Update the car tiles on the main panel.
+      await mainPanel.refresh();
+    }
+
+    // Called when a file is selected for uploading.
+    function
+    fileSelected()
+    {
+      // Get the information about the file.
+      let file = obj.file.file();
+
+      // Create a file reader to read the contents of the file.
+      let fr = new FileReader();
+
+      // Set the function to call when the file contents have been read.
+      fr.onload = function ()
+      {
+        fileLoaded(fr.result);
+      };
+
+      // Read the file as text.
+      fr.readAsText(file);
+    }
+
+    // Disable the change handler for the file select, if it exists.
+    obj.file.off("change");
+
+    // Reset the value of the file select.
+    obj.file.val("");
+
+    // Set the change handler for the file select.
+    obj.file.on("change", fileSelected);
+
+    // Click on the file select, triggering the file selector dialog.
+    obj.file.trigger("click");
   }
 
   /**
