@@ -51,42 +51,42 @@
     {
       "form_factor": "narrow",
       "label": "The main panel shown on mobile.",
-      "sizes": "662x1434",
+      "sizes": "662x1433",
       "src": "screenshots/screen1n.webp",
       "type": "image/webp"
     },
     {
       "form_factor": "narrow",
-      "label": "The scoring panel shown on mobile.",
-      "sizes": "662x1434",
+      "label": "The car information panel shown on mobile.",
+      "sizes": "662x1433",
       "src": "screenshots/screen2n.webp",
       "type": "image/webp"
     },
     {
       "form_factor": "narrow",
-      "label": "The saved score panel shown on mobile.",
-      "sizes": "662x1434",
+      "label": "The new fill-up panel shown on mobile.",
+      "sizes": "662x1433",
       "src": "screenshots/screen3n.webp",
       "type": "image/webp"
     },
     {
       "form_factor": "wide",
       "label": "The main panel shown on desktop.",
-      "sizes": "1735x864",
+      "sizes": "1736x900",
       "src": "screenshots/screen1w.webp",
       "type": "image/webp"
     },
     {
       "form_factor": "wide",
-      "label": "The scoring panel shown on desktop.",
-      "sizes": "1735x864",
+      "label": "The car information panel shown on desktop.",
+      "sizes": "1736x900",
       "src": "screenshots/screen2w.webp",
       "type": "image/webp"
     },
     {
       "form_factor": "wide",
-      "label": "The saved score panel shown on desktop.",
-      "sizes": "1735x864",
+      "label": "The new fill-up panel shown on desktop.",
+      "sizes": "1736x900",
       "src": "screenshots/screen3w.webp",
       "type": "image/webp"
     }

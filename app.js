@@ -1273,7 +1273,7 @@ showConfirm(message, yes = "Yes", no = "No")
     dialogConfirm = new Dialog();
 
     // Create a span that contains the contents in a column.
-    let span = new Span(dialogConfirm.body, "", "flex-column");
+    let span = new Span(dialogConfirm.dialog, "", "flex-column");
 
     // Create a span for the confirmation message.
     new Span(span.span, "&nbsp");
@@ -1323,7 +1323,7 @@ showAlert(message, button = "OK")
     dialogAlert = new Dialog();
 
     // Create a span that contains the contents in a column.
-    let span = new Span(dialogAlert.body, "", "flex-column");
+    let span = new Span(dialogAlert.dialog, "", "flex-column");
 
     // Create a span for the alert message.
     new Span(span.span, "&nbsp");

@@ -5,7 +5,7 @@
 
 const prefix = "fuel-tracker-";
 
-const cacheName = `${prefix}site-v1`;
+const cacheName = `${prefix}site-v2`;
 
 const assets =
 [
