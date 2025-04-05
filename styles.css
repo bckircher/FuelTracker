@@ -1,0 +1,730 @@
+/*
+ * Copyright (c) 2025 Brian Kircher
+ *
+ * Open Source Software: you can modify and/or share it under the terms of the
+ * BSD license file in the root directory of this project.
+ */
+
+:root
+{
+  --color-black: #000000;
+  --color-cyan: #1fa198;
+  --color-cyan-dark: #0f504c;
+  --color-gray1: #0f0f0f;
+  --color-gray2: #1f1f1f;
+  --color-gray3: #2f2f2f;
+  --color-gray4: #3f3f3f;
+  --color-gray5: #4f4f4f;
+  --color-gray6: #5f6f5f;
+  --color-gray7: #6f7f6f;
+  --color-gray8: #7f7f7f;
+  --color-gray9: #8f8f8f;
+  --color-gray10: #9f9f9f;
+  --color-gray11: #afafaf;
+  --color-gray12: #bfbfbf;
+  --color-gray13: #cfcfcf;
+  --color-gray14: #dfdfdf;
+  --color-gray15: #efefef;
+  --color-red: #ff3f3f;
+  --color-light-red: #7f0000;
+  --color-white: #ffffff;
+  --cover-time: 0.3s;
+  --popup-time: 0.25s;
+}
+
+@media (prefers-color-scheme: dark)
+{
+  :root
+  {
+    --accent-background-color: var(--color-gray3);
+    --accent-color: var(--color-red);
+    --background-color: var(--color-black);
+    --border-color: var(--color-red);
+    --button-background-color: var(--color-gray3);
+    --button-color: var(--color-white);
+    --button-select-background-color: var(--color-red);
+    --button-select-color: var(--color-black);
+    --color: var(--color-white);
+    --color-scheme: dark;
+  }
+}
+
+@media (prefers-color-scheme: light)
+{
+  :root
+  {
+    --accent-background-color: var(--color-gray13);
+    --accent-color: var(--color-light-red);
+    --background-color: var(--color-white);
+    --border-color: var(--color-light-red);
+    --button-background-color: var(--color-gray13);
+    --button-color: var(--color-black);
+    --button-select-background-color: var(--color-light-red);
+    --button-select-color: var(--color-white);
+    --color: var(--color-black);
+    --color-scheme: light;
+  }
+}
+
+*
+{
+  box-sizing: border-box;
+}
+
+a
+{
+  color: var(--color);
+}
+
+a:hover
+{
+  color: var(--accent-color);
+}
+
+input
+{
+  background-color: var(--background-color);
+  border: 0;
+  border-bottom: 1px solid var(--accent-color);
+  color: var(--color);
+  color-scheme: var(--color-scheme);
+  font-family: Arial;
+  font-size: 1.5rem;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  text-align: center;
+  width: 90%;
+}
+
+input:focus
+{
+  outline: 0;
+}
+
+html
+{
+  height: 100dvh;
+  overflow: hidden;
+  width: 100dvw;
+}
+
+body
+{
+  color: var(--color);
+  background-color: var(--background-color);
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 100dvw;
+}
+
+.flex-column
+{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flex-row
+{
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.toggle
+{
+  cursor: pointer;
+}
+
+.toggle .label
+{
+  display: inline-block;
+  user-select: none;
+}
+
+.toggle input[role="switch"]
+{
+  height: 0;
+  opacity: 0;
+  width: 0;
+}
+
+.toggle input[role="switch"] ~ .state
+{
+  box-sizing: unset;
+  display: inline-block;
+  user-select: none;
+}
+
+.toggle input[role="switch"] ~ .state > .container
+{
+  background: var(--background-color);
+  border: 0.1333rem solid var(--color);
+  box-sizing: unset;
+  border-radius: 0.75rem;
+  display: inline-block;
+  height: 1.5rem;
+  margin: 0 0.1rem 0 0.5rem;
+  position: relative;
+  top: 2px;
+  width: 2.5rem;
+}
+
+.toggle input[role="switch"] ~ .state > .container > .position
+{
+  background: var(--color);;
+  border: 2px solid var(--color);
+  border-radius: 9px;
+  box-sizing: unset;
+  display: inline-block;
+  height: 1rem;
+  left: 2px;
+  position: relative;
+  width: 1rem;
+}
+
+.toggle span.text
+{
+  display: inline-block;
+  height: 1.5rem;
+  position: relative;
+  width: 3rem;
+}
+
+.toggle span.on,
+.toggle span.off
+{
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.toggle input[role="switch"]:not(:checked) ~ .state span.on
+{
+  opacity: 0;
+}
+
+.toggle input[role="switch"]:checked ~ .state span.off
+{
+  opacity: 0;
+}
+
+.toggle input[role="switch"]:checked ~ .state > .container > .position
+{
+  left: 1.1rem;
+}
+
+.license-column
+{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  text-align: left;
+}
+
+.panel
+{
+  display: none;
+  height: 100dvh;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  transform: translateX(0%);
+  width: 100dvw;
+}
+
+.panel.cover
+{
+  animation: panel_cover var(--cover-time) ease normal;
+}
+
+.panel.uncover
+{
+  animation: panel_uncover var(--cover-time) ease normal;
+}
+
+.panel.show
+{
+  animation: panel_show var(--cover-time) ease normal;
+}
+
+.panel.hide
+{
+  animation: panel_hide var(--cover-time) ease normal;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+  .panel.cover
+  {
+    animation: panel_cover 0.01s ease normal;
+  }
+
+  .panel.uncover
+  {
+    animation: panel_uncover 0.01s ease normal;
+  }
+
+  .panel.show
+  {
+    animation: panel_show 0.01s ease normal;
+  }
+
+  .panel.hide
+  {
+    animation: panel_hide 0.01s ease normal;
+  }
+}
+
+.panel .container
+{
+  display: grid;
+  grid-template-rows: 3rem 1fr 3rem;
+  height: 100dvh;
+  overflow: hidden;
+  position: fixed;
+  width: 100dvw;
+}
+
+.panel .container .header
+{
+  align-items: center;
+  background-color: var(--accent-background-color);
+  color: var(--accent-color);
+  display: flex;
+  font-weight: bold;
+  grid-row: 1;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.panel .container .body
+{
+  background-color: var(--background-color);
+  grid-row: 2;
+  overflow-y: auto;
+}
+
+.panel .container .footer
+{
+  align-items: center;
+  background-color: var(--accent-background-color);
+  color: var(--accent-color);
+  display: flex;
+  grid-row: 3;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.panel .header button,
+.panel .footer button
+{
+  align-items: center;
+  background-color: unset;
+  border: 0;
+  color: unset;
+  display: flex;
+  font-size: 1.5rem;
+  height: 3rem;
+  justify-content: center;
+  min-width: 3rem;
+}
+
+.panel .header button:hover:not(.empty),
+.panel .footer button:hover:not(.empty)
+{
+  background-color: var(--button-select-background-color);
+  color: var(--button-select-color);
+}
+
+.addEditCar .heading
+{
+  color: var(--accent-color);
+}
+
+.car_tile
+{
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  color: var(--color);
+  display: grid;
+  grid-template-columns: 1fr 2rem;
+  min-height: 4.5rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: calc(100% - 1rem);
+}
+
+.car_tile:hover
+{
+  background-color: var(--button-background-color);
+  color: var(--button-color);
+}
+
+.car_tile .info
+{
+  align-items: center;
+  display: flex;
+  grid-column: 1;
+  height: 100%;
+  justify-content: left;
+}
+
+.car_tile .arrow
+{
+  align-items: center;
+  display: flex;
+  grid-column: 2;
+  height: 100%;
+  justify-content: center;
+}
+
+.fuel_tile
+{
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  color: var(--color);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr;
+  grid-template-rows: 1fr 1fr;
+  min-height: 4.5rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: calc(100% - 1rem);
+}
+
+.fuel_tile:hover
+{
+  background-color: var(--button-background-color);
+  color: var(--button-color);
+}
+
+.fuel_tile .empty
+{
+  align-items: center;
+  display: flex;
+  grid-column: 1 / span 4;
+  grid-row: 1 / span 2;
+  justify-content: center;
+}
+
+.fuel_tile .date
+{
+  align-items: center;
+  display: flex;
+  grid-column: 1 / span 2;
+  grid-row: 1;
+  justify-content: left;
+}
+
+.fuel_tile .mileage
+{
+  align-items: center;
+  display: flex;
+  grid-column: 3 / span 2;
+  grid-row: 1;
+  justify-content: right;
+}
+
+.fuel_tile .price
+{
+  align-items: center;
+  display: flex;
+  grid-column: 1;
+  grid-row: 2;
+  justify-content: left;
+}
+
+.fuel_tile .quantity
+{
+  align-items: center;
+  display: flex;
+  grid-column: 2 / span 2;
+  grid-row: 2;
+  justify-content: center;
+}
+
+.fuel_tile .total
+{
+  align-items: center;
+  display: flex;
+  grid-column: 4;
+  grid-row: 2;
+  justify-content: right;
+}
+
+@media (width > 768px)
+{
+  .fuel_tile
+  {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    min-height: 3rem;
+  }
+
+  .fuel_tile .empty
+  {
+    grid-column: 1 / span 5;
+    grid-row: 1;
+  }
+
+  .fuel_tile .date
+  {
+    grid-column: 1;
+    justify-content: left;
+  }
+
+  .fuel_tile .mileage
+  {
+    grid-column: 5;
+    justify-content: right;
+  }
+
+  .fuel_tile .price
+  {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: center;
+  }
+
+  .fuel_tile .quantity
+  {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .fuel_tile .total
+  {
+    grid-row: 1;
+    justify-content: center;
+  }
+}
+
+dialog
+{
+  background-color: var(--background-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 1rem;
+  color: var(--color);
+  text-align: center;
+  padding: 1rem;
+}
+
+dialog::backdrop
+{
+  background-color: #000000c0;
+}
+
+dialog[open]
+{
+  animation: dialog_show var(--popup-time) ease normal;
+}
+
+dialog.hide
+{
+  animation: dialog_hide var(--popup-time) ease normal;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+  dialog[open]
+  {
+    animation: dialog_show 0s ease normal;
+  }
+
+  dialog.hide
+  {
+    animation: dialog_hide 0.01s ease normal;
+  }
+}
+
+dialog a
+{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+dialog button
+{
+  background-color: var(--button-background-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 0.5rem;
+  color: var(--button-color);
+  font-size: 1.25rem;
+  min-width: 5rem;
+  padding: 0.5rem;
+}
+
+dialog button:hover
+{
+  background-color: var(--button-select-background-color);
+  color: var(--button-select-color);
+}
+
+dialog hr
+{
+  border: 1px solid var(--accent-color);
+  margin: 0 0 1rem 0;
+}
+
+dialog p
+{
+  margin: 0 0 1rem 0;
+}
+
+.about
+{
+  display: grid;
+  gap: 1.5rem;
+  grid-template-rows: 30dvh 1fr;
+}
+
+.about .icon
+{
+  grid-row: 1;
+}
+
+.about .icon img
+{
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.about .text
+{
+  grid-row: 2;
+}
+
+@media (width > 768px)
+{
+  .about
+  {
+    grid-template-columns: 30dvw 1fr;
+    grid-template-rows: unset;
+  }
+
+  .about .icon
+  {
+    grid-column: 1;
+    grid-row: unset;
+  }
+
+  .about .text
+  {
+    grid-column: 2;
+    grid-row: unset;
+  }
+}
+
+.about .title
+{
+  font-weight: bold;
+}
+
+.popup::backdrop
+{
+  background-color: #000000c0;
+}
+
+.popup .container
+{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.popup .container p
+{
+  /*
+  font-size: 1.5rem;
+  */
+  text-align: center;
+}
+
+@keyframes panel_cover
+{
+  from
+  {
+    transform: translateX(0%);
+  }
+  to
+  {
+    transform: translateX(-25%);
+  }
+}
+
+@keyframes panel_uncover
+{
+  from
+  {
+    transform: translateX(-25%);
+  }
+  to
+  {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes panel_show
+{
+  from
+  {
+    transform: translateX(100%);
+  }
+  to
+  {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes panel_hide
+{
+  from
+  {
+    transform: translateX(0%);
+  }
+  to
+  {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes dialog_show
+{
+  from
+  {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to
+  {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dialog_hide
+{
+  from
+  {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to
+  {
+    opacity: 0;
+    transform: scale(0);
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "background_color": "#000000",
+  "categories":
+  [
+    "cars"
+  ],
+  "description": "Logs and provides insights on fuel usage for automobiles",
+  "display": "standalone",
+  "icons":
+  [
+    {
+      "sizes": "192x192",
+      "src": "icons/icon-192x192.webp",
+      "type": "image/webp"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "192x192",
+      "src": "icons/icon-192x192-maskable.webp",
+      "type": "image/webp"
+    },
+    {
+      "sizes": "384x384",
+      "src": "icons/icon-384x384.webp",
+      "type": "image/webp"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "384x384",
+      "src": "icons/icon-384x384-maskable.webp",
+      "type": "image/webp"
+    },
+    {
+      "sizes": "512x512",
+      "src": "icons/icon-512x512.webp",
+      "type": "image/webp"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icons/icon-512x512-maskable.webp",
+      "type": "image/webp"
+    }
+  ],
+  "id": "index.html",
+  "lang": "en-US",
+  "name": "Fuel Tracker",
+  "orientation": "portrait",
+  "screenshots":
+  [
+    {
+      "form_factor": "narrow",
+      "label": "The main panel shown on mobile.",
+      "sizes": "662x1434",
+      "src": "screenshots/screen1n.webp",
+      "type": "image/webp"
+    },
+    {
+      "form_factor": "narrow",
+      "label": "The scoring panel shown on mobile.",
+      "sizes": "662x1434",
+      "src": "screenshots/screen2n.webp",
+      "type": "image/webp"
+    },
+    {
+      "form_factor": "narrow",
+      "label": "The saved score panel shown on mobile.",
+      "sizes": "662x1434",
+      "src": "screenshots/screen3n.webp",
+      "type": "image/webp"
+    },
+    {
+      "form_factor": "wide",
+      "label": "The main panel shown on desktop.",
+      "sizes": "1735x864",
+      "src": "screenshots/screen1w.webp",
+      "type": "image/webp"
+    },
+    {
+      "form_factor": "wide",
+      "label": "The scoring panel shown on desktop.",
+      "sizes": "1735x864",
+      "src": "screenshots/screen2w.webp",
+      "type": "image/webp"
+    },
+    {
+      "form_factor": "wide",
+      "label": "The saved score panel shown on desktop.",
+      "sizes": "1735x864",
+      "src": "screenshots/screen3w.webp",
+      "type": "image/webp"
+    }
+  ],
+  "short_name": "Fuel Tracker",
+  "start_url": "index.html",
+  "theme_color": "#000000"
+}
