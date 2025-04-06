@@ -845,15 +845,28 @@ class Button
    * @param {Object} parent The parent for the button.
    *
    * @param {string} label The optional text to appear in the button.
+   *
+   * @param {string} aria_label The optional ARIA label for the button.
+   *
+   * @param {boolean} aria_hidden If the button should be hidden from ARIA
+   *                              (only do this for space-holder buttons!).
    */
-  constructor(parent, label = "")
+  constructor(parent, label = "", aria_label = "", aria_hidden = false)
   {
     // If the button has no label, set its class to empty (so that it takes up
     // space but isn't usable).
     const _class = (label === "") ? ` class="empty"` : "";
 
+    // Set the ARIA label if supplied.
+    aria_label = (aria_label == "") ? "" : ` aria-label="${aria_label}"`;
+
+    // Set the ARIA hidden if requested.
+    aria_hidden = (aria_hidden == false) ? "" : ` aria-hidden="true"`;
+
     // The HTML for the button.
-    const html = `<button${_class}>${label}</button>`;
+    const html = `<button${_class}${aria_label}${aria_hidden}>` +
+                 `  ${label}` +
+                 `</button>`;
 
     // Add the button to the parent.
     parent.append(html);
@@ -1174,11 +1187,19 @@ class Dialog
 {
   /**
    * Builds the dialog and adds it to the DOM.
+   *
+   * @param {string} _class The optional class to add to the dialog.
    */
-  constructor()
+  constructor(_class = "")
   {
+    // Set the class, if one was supplied.
+    if(_class !== "")
+    {
+      _class = ` class="${_class}"`;
+    }
+
     // The HTML for the dialog.
-    let html = `<dialog></dialog}`;
+    let html = `<dialog${_class}></dialog}`;
 
     // Add the dialog to the DOM.
     $("body").append(html);
@@ -1322,7 +1343,7 @@ showConfirm(message, yes = "Yes", no = "No")
   if(dialogConfirm === null)
   {
     // Create a new dialog.
-    dialogConfirm = new Dialog();
+    dialogConfirm = new Dialog("confirmDialog");
 
     // Create a span that contains the contents in a column.
     let span = new Span(dialogConfirm.dialog, "", "flex-column");
@@ -1372,7 +1393,7 @@ showAlert(message, button = "OK")
   if(dialogAlert === null)
   {
     // Create a new dialog.
-    dialogAlert = new Dialog();
+    dialogAlert = new Dialog("alertDialog");
 
     // Create a span that contains the contents in a column.
     let span = new Span(dialogAlert.dialog, "", "flex-column");
@@ -1438,7 +1459,7 @@ showLicense(dialog, name, link, license)
     done(text)
     {
       // Create a new dialog.
-      dialog = new Dialog();
+      dialog = new Dialog("licenseDialog");
 
       // Create a span that contains the contents in a column.
       let span = new Span(dialog.dialog, "", "license-column");
@@ -1494,7 +1515,7 @@ showAbout()
   if(aboutDialog === null)
   {
     // Create the dialog.
-    aboutDialog = new Dialog();
+    aboutDialog = new Dialog("aboutDialog");
 
     // Add a "horizontal" span to contain the dialog.  It is truly horizontal
     // on a wider screen, but becomes stacked on a smaller screen (in essence
@@ -1775,19 +1796,19 @@ class MainPanel
     let panel = new Panel("main");
 
     // Add elements to the header of the panel.
-    let about = new Button(panel.header, fa("question-circle-o"));
+    let about = new Button(panel.header, fa("question-circle-o"), "about");
     new Span(panel.header, "Fuel Tracker");
-    let add = new Button(panel.header, fa("plus"));
+    let add = new Button(panel.header, fa("plus"), "add car");
 
     // Add elemnts to the footer of the panel.
     let span = new Span(panel.footer, "", "flex-row");
-    let signin = new Button(span.span, fa("sign-in"));
-    new Button(span.span);
+    let signin = new Button(span.span, fa("sign-in"), "sign in");
+    new Button(span.span, "", "", true);
     span = new Span(panel.footer, "", "flex-row");
-    let upload = new Button(span.span, fa("upload"));
+    let upload = new Button(span.span, fa("upload"), "upload");
     let file = new Input(span.span, "file");
     file.hide();
-    let download = new Button(span.span, fa("download"));
+    let download = new Button(span.span, fa("download"), "download");
 
     // Add click handlers to the buttons in the header and footer.
     about.on("click", showAbout);
@@ -2243,9 +2264,9 @@ class CarAddEditPanel
     let panel = new Panel("addEditCar");
 
     // Add elements to the header of the panel.
-    let back = new Button(panel.header, fa("chevron-left"));
+    let back = new Button(panel.header, fa("chevron-left"), "back");
     let title = new Span(panel.header);
-    let save = new Button(panel.header, fa("save"));
+    let save = new Button(panel.header, fa("save"), "save");
 
     // Add elements to the body of the panel, providing all the inputs needed
     // to capture information about the car.
@@ -2453,13 +2474,13 @@ class CarPanel
     let panel = new Panel("car");
 
     // Add elements to the header of the panel.
-    let back = new Button(panel.header, fa("chevron-left"));
+    let back = new Button(panel.header, fa("chevron-left"), "back");
     let title = new Span(panel.header);
-    let add = new Button(panel.header, fa("plus"));
+    let add = new Button(panel.header, fa("plus"), "add fill-up");
 
     // Add elements to the footer of the panel.
-    let graph = new Button(panel.footer, fa("line-chart"));
-    let trash = new Button(panel.footer, fa("trash"));
+    let graph = new Button(panel.footer, fa("line-chart"), "graph");
+    let trash = new Button(panel.footer, fa("trash"), "delete");
 
     // Add click handlers to the buttons in the header and footer.
     add.on("click", () => this.onAdd(this));
@@ -2833,9 +2854,9 @@ class FuelAddEditPanel
     let panel = new Panel("addEditFuel");
 
     // Add elements to the header of the panel.
-    let back = new Button(panel.header, fa("chevron-left"));
+    let back = new Button(panel.header, fa("chevron-left"), "back");
     let title = new Span(panel.header);
-    let save = new Button(panel.header, fa("save"));
+    let save = new Button(panel.header, fa("save"), "save");
 
     // Add elements to the body of the panel, providing all the inputs needed
     // to cpature information about the fill-up.
@@ -2872,7 +2893,7 @@ class FuelAddEditPanel
 
     // Add elements to the footer of the panel.
     new Span(panel.footer);
-    let trash = new Button(panel.footer, fa("trash"));
+    let trash = new Button(panel.footer, fa("trash"), "delete");
     new Span(panel.footer);
 
     // Add click handlers to the buttons in the header and footer.
